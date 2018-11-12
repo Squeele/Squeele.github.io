@@ -1,212 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
-			body {
-				font-family: Verdana;
-				margin: 0px;
-			}
-		</style>
-    </head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body
+        {
+            font-family: Verdana;
+            margin: 0px;
+        }
+        .title
+        {
+            margin-top: 1em;
+        }
+        .project-illustration
+        {
+            height: 100px;
+        }
+    </style>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+</head>
 <body style="overflow-y: scroll;">
-        
-        <script src="JS/three.min.js"></script>
-        <script src="JS/OrbitControls.js"></script>
-        <script type="text/javascript">
+
+    <script src="JS/three.min.js"></script>
+    <script src="JS/OrbitControls.js"></script>
+    <script type="text/javascript">
+
     
-        
-        var camera,scene,renderer, container;
-        var mouse =new THREE.Vector2();
-        var raycaster = new THREE.Raycaster();
-        var text_group;
-        var controls;
-        var width, height;
-        var states = new Array();
-        var speed = new Array();
-        init();
-        animate();
-        function init()
+    var camera,scene,renderer, container;
+    var mouse =new THREE.Vector2();
+    var raycaster = new THREE.Raycaster();
+    var text_group;
+    var controls;
+    var width, height;
+    var states = new Array();
+    var speed = new Array();
+    init();
+    animate();
+    function init()
+    {
+        container = document.createElement('div');
+        document.body.appendChild(container);
+        renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true });
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight/3 );
+        document.body.appendChild( renderer.domElement );
+        width = window.innerWidth;
+        height = window.innerHeight;
+        camera = new THREE.PerspectiveCamera( 45, width / height*3, 1, 1000 );
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color( 0x3273dc );
+        scene.add( new THREE.AmbientLight( 0xFFFFFF ) );
+        camera.updateProjectionMatrix();
+        camera.up = new THREE.Vector3(0,0,1);
+        camera.position.z = -500;
+        scene.add(camera);
+        var geometry = new THREE.BoxGeometry(1,1,1);
+        var material = new THREE.MeshPhongMaterial({color: 0xff0000});
+        var mesh = new THREE.Mesh(geometry,material);
+        //scene.add(mesh);
+        text_group = new THREE.Group();
+        controls = new THREE.OrbitControls(camera, renderer.domElement );
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+        document.addEventListener('click', RaycastHandler, false);
+        addName();
+    }
+
+    function addName()
+    {
+        var fontload = new THREE.FontLoader()
+        fontload.load('Font/Roboto_Black_Regular.json',
+        function(font)
         {
-            container = document.createElement('div');
-            document.body.appendChild(container);
-            renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true });
-            renderer.setPixelRatio( window.devicePixelRatio );
-            renderer.setSize( window.innerWidth, window.innerHeight/3 );
-            document.body.appendChild( renderer.domElement );
-            width = window.innerWidth;
-            height = window.innerHeight;
-            camera = new THREE.PerspectiveCamera( 45, width / height*3, 1, 1000 );
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color( 0xffffff);
-            scene.add( new THREE.AmbientLight( 0xFFFFFF ) );
-            camera.updateProjectionMatrix();
-            camera.up = new THREE.Vector3(0,0,1);
-            camera.position.z = -500;
-            scene.add(camera);
-            var geometry = new THREE.BoxGeometry(1,1,1);
-            var material = new THREE.MeshPhongMaterial({color: 0xff0000});
-            var mesh = new THREE.Mesh(geometry,material);
-            //scene.add(mesh);
-            text_group = new THREE.Group();
-            controls = new THREE.OrbitControls(camera, renderer.domElement );
-            document.addEventListener('mousemove', onDocumentMouseMove, false);
-            document.addEventListener('click', RaycastHandler, false);
-            addName();
-        }
-    
-        function addName()
-        {
-            var fontload = new THREE.FontLoader()
-            fontload.load('Font/Roboto_Black_Regular.json',
-            function(font)
+            var name = "Lucas Dubouchet";
+            var studies = "M2 3DMT"
+            var material = new THREE.MeshBasicMaterial( {
+                        color: 0xFFFFFF,
+                        transparent: true,
+                        opacity: 0.9,
+                        side: THREE.DoubleSide
+                    } );
+            for (var i = 0; i<name.length;i++)
             {
-                var name = "Lucas Dubouchet";
-                var studies = "M2 3DMT"
-                var material = new THREE.MeshBasicMaterial( {
-                            color: 0x111111,
-                            transparent: true,
-                            opacity: 0.9,
-                            side: THREE.DoubleSide
-                        } );
-                for (var i = 0; i<name.length;i++)
-                {
-                    var name_shapes = font.generateShapes( name[i], 50 );
-                    var name_geometry = new THREE.ShapeBufferGeometry( name_shapes );
-                    name_geometry.computeBoundingBox();
-                    var xMid =  0.5 * ( 75*i )-(37.5*name.length)/2;
-                    name_geometry.translate( xMid, 0, 0 );
-                    name_geometry.rotateX(Math.PI);
-                    text = new THREE.Mesh( name_geometry, material );
-                    text.name = i.toString();
-                    text_group.add(text);
-                    states[i]=false;
-                    speed[i] = 0.5;
-                }
-                for (var i = 0; i<studies.length;i++)
-                {
-                    var studies_shapes = font.generateShapes( studies[i], 40 );
-                    var studies_geometry = new THREE.ShapeBufferGeometry( studies_shapes );
-                    studies_geometry.computeBoundingBox();
-                    
-                    var xMid =  0.5 * ( 80*i )-(40*studies.length)/2;
-                    studies_geometry.translate( xMid, -100, 0 );
-                    studies_geometry.rotateX(Math.PI);
-                    text_studies = new THREE.Mesh(studies_geometry,material);
-                    text_studies.name = (i+name.length).toString();
-                    text_group.add(text_studies);
-                    states[i+name.length] = false;
-                    speed[i+name.length] = 0.5;
-                }
+                var name_shapes = font.generateShapes( name[i], 50 );
+                var name_geometry = new THREE.ShapeBufferGeometry( name_shapes );
+                name_geometry.computeBoundingBox();
+                var xMid =  0.5 * ( 75*i )-(37.5*name.length)/2;
+                name_geometry.translate( xMid, 0, 0 );
+                name_geometry.rotateX(Math.PI);
+                text = new THREE.Mesh( name_geometry, material );
+                text.name = i.toString();
+                text_group.add(text);
+                states[i]=false;
+                speed[i] = 0.5;
+            }
+            for (var i = 0; i<studies.length;i++)
+            {
+                var studies_shapes = font.generateShapes( studies[i], 40 );
+                var studies_geometry = new THREE.ShapeBufferGeometry( studies_shapes );
+                studies_geometry.computeBoundingBox();
                 
-                scene.add(text_group);
+                var xMid =  0.5 * ( 80*i )-(40*studies.length)/2;
+                studies_geometry.translate( xMid, -100, 0 );
+                studies_geometry.rotateX(Math.PI);
+                text_studies = new THREE.Mesh(studies_geometry,material);
+                text_studies.name = (i+name.length).toString();
+                text_group.add(text_studies);
+                states[i+name.length] = false;
+                speed[i+name.length] = 0.5;
             }
-            );
-    
-    
+            
+            scene.add(text_group);
         }
-        function animate()
+        );
+
+
+    }
+    function animate()
+    {
+        requestAnimationFrame( animate );
+        for(var i = 0; i < states.length;i++)
         {
-            requestAnimationFrame( animate );
-            for(var i = 0; i < states.length;i++)
+            if(states[i] == true)
             {
-                if(states[i] == true)
-                {
-                    text_group.children[i].position.y+=speed[i];
-                    speed[i]+=0.1;
-                }
+                text_group.children[i].position.y+=speed[i];
+                speed[i]+=0.1;
             }
-            controls.update();
-            render();
-        }
-        function render()
-        {
-            renderer.render(scene, camera);
-        }
-    
-        function onDocumentMouseMove( event ) {
-                    event.preventDefault();
-                    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-                    mouse.y = - ( event.clientY / window.innerHeight*3 ) * 2 + 1;
-                }
-                
-        function RaycastHandler(event)
-        {
-            raycaster.setFromCamera(mouse,camera);
-            var intersection = raycaster.intersectObjects(text_group.children,true);
-            if ( intersection.length > 0 )
+            else
             {
-                var index = parseInt(intersection[0].object.name);
-    
-                if (states[index] == false)
-                {
-                    states[index] = true;
-                }
+                text_group.children[i].rotation.y=Math.sin((new Date().getTime())/1000)*Math.PI/18;
             }
         }
-        </script>
-        <div id="projects" >
-       <h1 id = "current">Projets en cours: NTNU Gjøvik, Norvège</h1> 
-        <h2>
-            Génération Procédurale de Terrain
-        </h2>
-        <div>
-            Génération et évaluation de terrain avec le moteur Unity, le but étant de trouver les paramètres pouvant rendre un terrain, généré procéduralement, agréable à jouer.
-        </div>
-        <h2>
-            Étude de l'impact des caustiques sur la perception de la transparence
-        </h2>
-            <div>
-                Analyse de différentes techniques de rendu 3D photo-réaliste: PathTracing, Raytracing, PBR<br>
-                Expérience psychophysique grâce à des images rendues avec les techniques passées en revue précédemment dans l'espoir de trouver une corrélation entre l'intensité des caustiques et la transparence d'un objet.
+        controls.update();
+        render();
+    }
+    function render()
+    {
+        renderer.render(scene, camera);
+    }
+
+    function onDocumentMouseMove( event ) {
+                event.preventDefault();
+                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                mouse.y = - ( event.clientY / window.innerHeight*3 ) * 2 + 1;
+            }
+            
+    function RaycastHandler(event)
+    {
+        raycaster.setFromCamera(mouse,camera);
+        var intersection = raycaster.intersectObjects(text_group.children,true);
+        if ( intersection.length > 0 )
+        {
+            var index = parseInt(intersection[0].object.name);
+
+            if (states[index] == false)
+            {
+                states[index] = true;
+            }
+        }
+    }
+    </script>
+
+    <!-- Title -->
+    <h2 class="title is-2 has-text-centered">Projets en cours:</h2>
+    <p class="subtitle has-text-centered">NTNU Gjøvik, Norvège</p>
+
+    <!-- Projects -->
+    <section class="container">
+      <div class="columns features">
+        <div class="column is-4">
+          <div class="card is-shady">
+            <!-- <div class="card-image">
+              <figure class="image is-4by3">
+                <img class="project-illustration" src="https://i.imgsafe.org/ba/baa924a5e3.png" alt="Placeholder image">
+              </figure>
+            </div> -->
+            <div class="card-content">
+              <div class="content">
+                <h4>Génération Procédurale de Terrain </h4>
+                <p>Génération et évaluation de terrain avec le moteur Unity, le but étant de trouver les paramètres pouvant rendre un terrain, généré procéduralement, agréable à jouer. </p>
+
+              </div>
             </div>
-        <h2>
-            Capture et visualisation des mouvements d'un chirurgien
-        </h2>
-            <div>
-                Extraction avec OpenPose les gestes et postures du chirurgien afin de les intégrer dans un visualiseur web basée three.js.
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="card is-shady">
+            <div class="card-content">
+              <div class="content">
+                <h4>Étude de l'impact des caustiques sur la perception de la transparence </h4>
+                <p>Analyse de différentes techniques de rendu 3D photo-réaliste: PathTracing, Raytracing, PBR</p>
+                <p>Expérience psychophysique grâce à des images rendues avec les techniques passées en revue précédemment dans l'espoir de trouver une corrélation entre l'intensité des caustiques et la transparence d'un objet. </p>
+
+              </div>
             </div>
-        
-        <h1 id = "past">
-            Projets Terminés
-        </h1>
-        <h2>
-            Visualisation de données sur une carte 3D
-        </h2>
-        <div>
-            Visualisation de données sensorielles sur une carte en 3D sur navigateur Web, avec le framework THREE.js.
+          </div>
         </div>
-        <h2>
-            Outil d'images stéréoscopiques
-        </h2>
-        <div>
-            Application développée en C++ avec la librairie OpenCV, qui permet de prendre des images stéréo et en faire une imag 3D anaglyphe.
+        <div class="column is-4">
+          <div class="card is-shady">
+            <div class="card-content">
+              <div class="content">
+                <h4>Capture et visualisation des mouvements d'un chirurgien </h4>
+                <p>Extraction avec OpenPose les gestes et postures du chirurgien afin de les intégrer dans un visualiseur web basée three.js. </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <h2>
-            Ensemble d'applications de Computer Vision
-        </h2>
-        <div>
-            Reconnaissance d'image, calibration de caméra, reconstituion de nuages de points en Matlab et en Python/OpenCV.
-        </div>
+      </div>
+      
+    </section>
+   
+    <!-- Title -->
+    <h2 class="title is-2 has-text-centered">Projets terminés</h2>
 
-        <h1 id = "perso">
-            Projets Personnels
-        </h1>
-        <h2>
-            SandStorm
-        </h2>
-        <div>
-            Jeu Unity en vue du dessus. En cours de prototypage.
+    <!-- Projects -->
+    <section class="container">
+        <div class="columns features">
+            <div class="column is-4">
+            <div class="card is-shady">
+                <div class="card-content">
+                <div class="content">
+                    <h4>Visualisation de données sur une carte 3D </h4>
+                    <p>Visualisation de données sensorielles sur une carte en 3D sur navigateur Web, avec le framework THREE.js. </p>
+                    <a class="button is-link" href = "https://github.com/Squeele/ScentProject">Plus d'infos</a>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="column is-4">
+            <div class="card is-shady">
+                <div class="card-content">
+                <div class="content">
+                    <h4>Outil d'images stéréoscopiques </h4>
+                    <p>Application développée en C++ avec la librairie OpenCV, qui permet de prendre des images stéréo et en faire une image 3D anaglyphe. </p>
+                    <a class="button is-link" href = "https://github.com/Squeele/StereoImageProject">Plus d'infos</a>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="column is-4">
+            <div class="card is-shady">
+                <div class="card-content">
+                <div class="content">
+                    <h4>Ensemble d'applications de Computer Vision </h4>
+                    <p>Reconnaissance d'image, calibration de caméra, reconstituion de nuages de points en Matlab et en Python/OpenCV. </p>
+                </div>
+                </div>
+            </div>
+            </div>
         </div>
-        <h2>
-            Father's Duty
-        </h2>
-        <div>
-            Jeu développé en équipe sur le moteur Godot à l'occasion de la Ludum Dare 40.
+    </section>
+
+    <!-- Title -->
+    <h2 class="title is-2 has-text-centered">Projets personnels</h2>
+
+    <!-- Projects -->
+    <section class="container">
+        <div class="columns features">
+            <div class="column is-4">
+            <div class="card is-shady">
+                <div class="card-content">
+                <div class="content">
+                    <h4>SandStorm </h4>
+                    <p>Jeu Unity en vue du dessus. En cours de prototypage.</p>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="column is-4">
+            <div class="card is-shady">
+                <div class="card-content">
+                <div class="content">
+                    <h4>Father's Duty</h4>
+                    <p>Jeu développé en équipe sur le moteur Godot à l'occasion de la Ludum Dare 40.</p>
+                    <a class="button is-link" href =  "https://github.com/pop123123123/LD40">Plus d'infos</a>
+                </div>
+                </div>
+            </div>
+            </div>
         </div>
-
-    </div>
-</body>    
-
-    </html>
+    </section>
+</body>
+</html>
