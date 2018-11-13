@@ -77,6 +77,7 @@
         {
             var name = "Lucas Dubouchet";
             var studies = "M2 3DMT"
+            var nb_caps = 0;
             var material = new THREE.MeshBasicMaterial( {
                         color: 0xFFFFFF,
                         transparent: true,
@@ -86,9 +87,14 @@
             for (var i = 0; i<name.length;i++)
             {
                 var name_shapes = font.generateShapes( name[i], 50 );
+                
                 var name_geometry = new THREE.ShapeBufferGeometry( name_shapes );
-                name_geometry.computeBoundingBox();
-                var xMid =  0.5 * ( 75*i )-(37.5*name.length)/2;
+                //name_geometry.computeBoundingBox();
+                var xMid =  0.5 * ( 75*(i-nb_caps)+85*nb_caps )-(37.5*(name.length-2)+2*42.5)/2;
+                if (name[i].toUpperCase() === name[i] && name[i] !== " ")
+                {
+                    nb_caps+=1;
+                }
                 name_geometry.translate( xMid, 0, 0 );
                 name_geometry.rotateX(Math.PI);
                 text = new THREE.Mesh( name_geometry, material );
@@ -182,7 +188,7 @@
               <div class="content">
                 <h4>Génération Procédurale de Terrain </h4>
                 <p>Génération et évaluation de terrain avec le moteur Unity, le but étant de trouver les paramètres pouvant rendre un terrain, généré procéduralement, agréable à jouer. </p>
-
+                <a class="button is-link" href = "https://github.com/Squeele/ProceduralGeneration">Plus d'infos</a>
               </div>
             </div>
           </div>
@@ -276,7 +282,7 @@
                 <div class="content">
                     <h4>Father's Duty</h4>
                     <p>Jeu développé en équipe sur le moteur Godot à l'occasion de la Ludum Dare 40.</p>
-                    <a class="button is-link" href =  "https://github.com/pop123123123/LD40">Plus d'infos</a>
+                    <a class="button is-link" href =  "https://ldjam.com/events/ludum-dare/40/patternal-duty">Plus d'infos</a>
                 </div>
                 </div>
             </div>
