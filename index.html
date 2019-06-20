@@ -62,8 +62,10 @@
         var material = new THREE.MeshPhongMaterial({color: 0xff0000});
         var mesh = new THREE.Mesh(geometry,material);
         //scene.add(mesh);
-        text_group = new THREE.Group();
+        //text_group = new THREE.Group();
         controls = new THREE.OrbitControls(camera, renderer.domElement );
+        controls.maxDistance = 700;
+        
         document.addEventListener('mousemove', onDocumentMouseMove, false);
         document.addEventListener('click', RaycastHandler, false);
         addName();
@@ -71,12 +73,12 @@
 
     function addName()
     {
+        text_group = new THREE.Group();
         var fontload = new THREE.FontLoader()
         fontload.load('Font/Roboto_Black_Regular.json',
         function(font)
         {
             var name = "Lucas Dubouchet";
-            var studies = "M2 3DMT"
             var nb_caps = 0;
             var material = new THREE.MeshBasicMaterial( {
                         color: 0xFFFFFF,
@@ -102,21 +104,6 @@
                 text_group.add(text);
                 states[i]=false;
                 speed[i] = 0.5;
-            }
-            for (var i = 0; i<studies.length;i++)
-            {
-                var studies_shapes = font.generateShapes( studies[i], 40 );
-                var studies_geometry = new THREE.ShapeBufferGeometry( studies_shapes );
-                studies_geometry.computeBoundingBox();
-                
-                var xMid =  0.5 * ( 80*i )-(40*studies.length)/2;
-                studies_geometry.translate( xMid, -100, 0 );
-                studies_geometry.rotateX(Math.PI);
-                text_studies = new THREE.Mesh(studies_geometry,material);
-                text_studies.name = (i+name.length).toString();
-                text_group.add(text_studies);
-                states[i+name.length] = false;
-                speed[i+name.length] = 0.5;
             }
             
             scene.add(text_group);
@@ -172,9 +159,28 @@
 
     <!-- Title -->
     <h2 class="title is-2 has-text-centered">Projets en cours:</h2>
-    <p class="subtitle has-text-centered">NTNU Gjøvik, Norvège</p>
-
-    <!-- Projects -->
+    <p class="subtitle has-text-centered">Siradel, Rennes</p>
+    <section class="container">
+        <div class="columns features">
+          <div class="column is-4">
+            <div class="card is-shady">
+              <!-- <div class="card-image">
+                <figure class="image is-4by3">
+                  <img class="project-illustration" src="https://i.imgsafe.org/ba/baa924a5e3.png" alt="Placeholder image">
+                </figure>
+              </div> -->
+              <div class="card-content">
+                <div class="content">
+                  <h4>City-Wide Mesh Simplification </h4>
+                  <p>Implémentations de différents algorithmes de simplification de maillages 3D représentant des bâtiments. Simplification de bâtiments individuels, mais également création automatique de maillages simplifiés regroupant plusieurs bâtiments. </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+</section>
+          <!-- Projects -->
+          <h2 class="title is-2 has-text-centered">Projets passés:</h2>
     <section class="container">
       <div class="columns features">
         <div class="column is-4">
