@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body
+        {
+            font-family: Verdana;
+            margin: 0px;
+        }
+        .title
+        {
+            margin-top: 1em;
+        }
+        .project-illustration
+        {
+            height: 100px;
+        }
+    </style>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <title>Mesh Simplification</title>
+</head>
+
+<body>
+        <h2 class="title is-2 has-text-centered">City Wide Mesh Simplification</h2>
+<div>
+    Projet de stage de fin d'étude: Simplification automatisée de maillages 3D représentant des bâtiments. Ici, deux exemples d'une des techniques utilisées. <br/>
+    Cette technique se rapproche de la création d'imposteurs. 
+    Le but est d'obtenir des meshes basse définition regroupant plusieurs bâtiments, pour être visualisés de loin tout en gardant la sémantique de chaque ville. 
+    <img src="Images/8000.png" alt="First Example: Original" width="500" height="244"></img>
+    <img src="Images/8502.png" alt="First Example: Simplified" width="500" height="244"></img> <br/>
+    Gauche : Premier exemple, maillages originaux: environ 4 500 000 sommets pour 8000 bâtiments (1,3 Go sur disque). Droite : Premier exemple simplifié: environ 70 000 sommets (100 Mo sur disque). <br/>
+    <img src="Images/4000000.png" alt="Second Example: Original" width="260" height="345"></img>
+    
+    <img src="Images/300.png" alt="Second Example: Simplified" width="260" height="345"></img> <br/>
+    Gauche : Deuxième exemple, maillages originaux avec des bâtiments très détaillés. Environ 4 000 000 sommets.
+    Droite : Deuxième exemple simplifié, environ 14 000 sommets.
+</div>
+
+</body>
