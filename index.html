@@ -133,21 +133,19 @@
     function animate()
     {
         requestAnimationFrame( animate );
-        // if(text_group.children.size > 0)
-        // {
-        //   for(var i = 0; i < states.length;i++)
-        //   {
-        //       if(states[i] == true)
-        //       {
-        //           text_group.children[i].position.y+=speed[i];
-        //           speed[i]+=0.1;
-        //       }
-        //       else
-        //       {
-        //           text_group.children[i].rotation.y=Math.sin((new Date().getTime())/1000)*Math.PI/18;
-        //       }
-        //   }
-        //   }
+          for(var i = 0; i < states.length;i++)
+          {
+              // if(states[i] == true)
+              // {
+              //     text_group.children[i].position.y+=speed[i];
+              //     speed[i]+=0.1;
+              // }
+              // else
+              // {
+                  text_group.children[i].rotation.y=Math.sin((new Date().getTime())/1000)*Math.PI/18;
+              //}
+          }
+
         controls.update();
         render();
     }
