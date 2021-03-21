@@ -26,7 +26,7 @@
 </head>
 <body>
 
-    <button onclick="addName()" id = "reset">Reset</button>
+    <!-- <button onclick="addName()" id = "reset">Reset</button>
 		<style>
 			#button{
 				position: absolute;
@@ -38,7 +38,7 @@
 				z-index: 100;
 				display:block;
 			}
-		</style>
+		</style> -->
     <script src="JS/three.min.js"></script>
     <script src="JS/OrbitControls.js"></script>
     <script type="text/javascript">
@@ -133,21 +133,21 @@
     function animate()
     {
         requestAnimationFrame( animate );
-        if(text_group.children.size > 0)
-        {
-          for(var i = 0; i < states.length;i++)
-          {
-              if(states[i] == true)
-              {
-                  text_group.children[i].position.y+=speed[i];
-                  speed[i]+=0.1;
-              }
-              else
-              {
-                  text_group.children[i].rotation.y=Math.sin((new Date().getTime())/1000)*Math.PI/18;
-              }
-          }
-          }
+        // if(text_group.children.size > 0)
+        // {
+        //   for(var i = 0; i < states.length;i++)
+        //   {
+        //       if(states[i] == true)
+        //       {
+        //           text_group.children[i].position.y+=speed[i];
+        //           speed[i]+=0.1;
+        //       }
+        //       else
+        //       {
+        //           text_group.children[i].rotation.y=Math.sin((new Date().getTime())/1000)*Math.PI/18;
+        //       }
+        //   }
+        //   }
         controls.update();
         render();
     }
