@@ -26,6 +26,19 @@
 </head>
 <body>
 
+    <button onclick="addName()" id = "reset">Reset</button>
+		<style>
+			#button{
+				position: absolute;
+				color : black;
+				top: 10px;
+				left:10px;
+				width: 10%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
+		</style>
     <script src="JS/three.min.js"></script>
     <script src="JS/OrbitControls.js"></script>
     <script type="text/javascript">
@@ -39,6 +52,7 @@
     var width, height;
     var states = new Array();
     var speed = new Array();
+    var button;
     init();
     animate();
     function init()
@@ -74,9 +88,15 @@
 
     function addName()
     {
+      //empty scene so names never overlap
+        while(scene.children.length > 0)
+        { 
+            scene.remove(scene.children[0]); //quick and dirty way, but anyway we only have a few characters without textures
+        }
         text_group = new THREE.Group();
         var fontload = new THREE.FontLoader()
         fontload.load('Font/Roboto_Black_Regular.json',
+          //loaded font-> generate letetrs and place them in the scene
         function(font)
         {
             var name = "Lucas Dubouchet";
@@ -92,7 +112,7 @@
                 var name_shapes = font.generateShapes( name[i], 50 );
                 
                 var name_geometry = new THREE.ShapeBufferGeometry( name_shapes );
-                //name_geometry.computeBoundingBox();
+                // Very, very complicated math formule to place the letters independently
                 var xMid =  0.5 * ( 75*(i-nb_caps)+85*nb_caps )-(37.5*(name.length-2)+2*42.5)/2;
                 if (name[i].toUpperCase() === name[i] && name[i] !== " ")
                 {
@@ -159,9 +179,32 @@
     </script>
 
     <!-- Title -->
+
     <h2 class="title is-2 has-text-centered">Projets en cours:</h2>
     <section class="container">
         <div class="columns features">
+          <div class="column is-4">
+            <div class="card is-shady">
+ 
+              <div class="card-content">
+                <div class="content">
+                  <h4>Compression Progressive de Maillage 3D texturés, LIRIS/INRIA, Lyon</h4>
+                  <p>Implémentation de méthodes de simplification et de raffinement de modèles 3D et utilisation de techniques d'encodage pour réduire la taille de modèles 3D.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+</section>
+
+
+
+
+
+          <!-- Projects -->
+          <h2 class="title is-2 has-text-centered">Projets passés:</h2>
+    <section class="container">
+      <div class="columns features">
           <div class="column is-4">
             <div class="card is-shady">
                <div class="card-image">
@@ -194,13 +237,7 @@
               </div>
             </div>
           </div>
-          </div>
-</section>
-          <!-- Projects -->
-          <h2 class="title is-2 has-text-centered">Projets passés:</h2>
-    <section class="container">
-      <div class="columns features">
-        
+
         <div class="column is-4">
           <div class="card is-shady">
             <div class="card-content">
@@ -273,16 +310,47 @@
     <!-- Projects -->
     <section class="container">
         <div class="columns features">
-            <div class="column is-4">
+          <div class="column is-4">
             <div class="card is-shady">
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img class="project-illustration" src="Images/kidpunk.PNG" alt="kidpunk">
+                    </figure>
+                  </div> 
                 <div class="card-content">
                 <div class="content">
-                    <h4>SandStorm </h4>
-                    <p>Jeu Unity en vue du dessus. En cours de prototypage.</p>
+                    <h4>KidPunk</h4>
+                    <p>Jeu de plate-formes, développé en équipe sur le moteur Godot. Level-design/Visuels/Musique/Intégration d'assets</p>
+                    <a class="button is-link" href =  "https://ldjam.com/events/ludum-dare/46/kidpunk">Plus d'infos</a>
                 </div>
                 </div>
             </div>
             </div>
+
+            <div class="column is-4">
+              <div class="card is-shady">
+                  <div class="card-content">
+                  <div class="content">
+                      <h4>Once upon a Chip</h4>
+                      <p>Jeu d'action développé en équipe sur Unity. Level-design/Visuels/Musique/Programmation </p>
+                      <a class="button is-link" href =  "https://ldjam.com/events/ludum-dare/45/once-upon-a-chip">Plus d'infos</a>
+                  </div>
+                  </div>
+              </div>
+              </div>
+  
+
+            <div class="column is-4">
+              <div class="card is-shady">
+                  <div class="card-content">
+                  <div class="content">
+                      <h4>KidPunk</h4>
+                      <p>Jeu de plate-formes, développé sur le moteur Godot. Level-design/Visuels/Musique/Programmation</p>
+                      <a class="button is-link" href =  "https://ldjam.com/events/ludum-dare/40/patternal-duty">Plus d'infos</a>
+                  </div>
+                  </div>
+              </div>
+              </div>
             <div class="column is-4">
             <div class="card is-shady">
                 <div class="card-content">
